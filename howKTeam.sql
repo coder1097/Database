@@ -507,3 +507,38 @@ FROM dbo.BOMON a
 INNER JOIN dbo.KHOA b ON a.MAKHOA=b.MAKHOA
 LEFT JOIN dbo.GIAOVIEN c ON  a.MABM=c.MABM
 WHERE b.TENKHOA = N'Sinh học'
+
+--Xuất ra danh sách giáo viên tham gia nhiều hơn 1 đề tài
+
+--Xuất ra thông tin khoa có nhiều hơn 2 giáo viên
+SELECT *
+FROM dbo.KHOA as a
+WHERE 2 < (
+	SELECT COUNT(*)
+	FROM dbo.GIAOVIEN b
+	INNER JOIN dbo.BOMON c ON b.MABM=c.MABM
+	AND c.MAKHOA=a.MAKHOA
+)
+
+--Xuất ra thông tin giáo viên có hơn 2 người thân
+SELECT *
+FROM dbo.GIAOVIEN AS a
+WHERE 2 < (
+	SELECT COUNT(*) FROM dbo.NGUOITHAN B
+	WHERE a.MAGV=b.MAGV
+)
+
+--Xuất ra thông tin giáo viên lớn tuổi hơn ít nhất 5 gv trong trường
+SELECT * FROM dbo.GIAOVIEN as a
+WHERE 5 <= (
+	SELECT COUNT(*) FROM dbo.GIAOVIEN b
+	WHERE b.MAGV <> a.MAGV 
+	AND YEAR(a.NGSINH) < YEAR(b.NGSINH) 
+)
+
+
+
+
+
+
+
