@@ -405,7 +405,7 @@
 	GO	
 
 --Bai 8
---Bai giang
+--BTBG
 --1
 SELECT a.MAGV AS MA_GV, a.HOTEN AS TEN_GV, b.TENBM AS TEN_BO_MON 
 FROM dbo.GIAOVIEN a
@@ -428,6 +428,7 @@ INNER JOIN dbo.BOMON b ON a.MABM=b.MABM
 INNER JOIN dbo.KHOA  c ON b.MAKHOA=c.MAKHOA
 
 --Bai 9
+--BTBG
 --Xuất ra họ tên, năm sinh, tuổi của những giáo viên có tuổi nhỏ hơn 40
 SELECT a.HOTEN AS HO_TEN, YEAR(a.NGSINH) AS NAM_SINH, YEAR(GETDATE())-YEAR(a.NGSINH) AS TUOI
 FROM dbo.GIAOVIEN a
@@ -462,7 +463,6 @@ FROM dbo.NGUOITHAN
 WHERE MAGV='007'
 
 --BT bài 9
-
 --Xuất ra thông tin giáo viên và GVQLCM của người đó
 SELECT a.HOTEN AS GV,b.HOTEN AS GVQLCM
 FROM dbo.GIAOVIEN a, dbo.GIAOVIEN b
@@ -477,3 +477,33 @@ WHERE a.MABM=b.MABM AND b.MAKHOA=c.MAKHOA AND c.MAKHOA='CNTT'
 SELECT b.HOTEN as TEN_GV, c.TENDT as TEN_DT
 FROM dbo.THAMGIADT a, dbo.GIAOVIEN b, dbo.DETAI c
 WHERE a.MAGV=b.MAGV AND a.MADT=c.MADT AND a.KETQUA=N'Đạt'
+
+--Bài 13
+--TLBG
+--Xuất ra danh sách giáo viên chủ nhiệm hoặc chưa chủ nhiệm đề tài
+SELECT a.HOTEN,b.TENDT
+FROM dbo.GIAOVIEN a
+LEFT JOIN dbo.DETAI b on a.MAGV=b.GVCNDT
+--Xuất ra thông tin bộ môn đã có giáo viên dạy hoặc chưa có gv dạy
+SELECT a.TENBM as TEN_BM,b.HOTEN AS TEN_GVGD
+FROM dbo.BOMON a
+LEFT JOIN dbo.GIAOVIEN b ON a.MABM=b.MABM
+--Xuất ra d/s gv làm trưởng bộ môn hoặc chưa làm trưởng bộ môn
+SELECT a.HOTEN as TEN_GV,b.TENBM AS TRUONG_BM
+FROM dbo.GIAOVIEN a
+LEFT JOIN dbo.BOMON b ON a.MAGV=b.TRUONGBM
+--Xuất ra d/s bộ môn có trưởng bộ môn hoặc chưa có trưởng bộ môn
+SELECT a.TENBM AS TEN_BM, b.HOTEN AS TEN_GV
+FROM dbo.BOMON a
+LEFT JOIN dbo.GIAOVIEN b ON a.TRUONGBM=b.MAGV
+--Xuất ra danh sách các GV nam có người thân hoặc k có người thân
+SELECT a.HOTEN AS TEN_GV, b.TEN AS TEN_NGUOI_THAN
+FROM dbo.GIAOVIEN a
+LEFT JOIN dbo.NGUOITHAN B ON a.MAGV=b.MAGV
+WHERE a.PHAI='Nam'
+--Xuất ra thông tin bộ môn khoa sinh học đã có giáo viên dạy hoặc chưa có gv dạy
+SELECT a.TENBM AS TEN_BM, c.HOTEN AS TEN_GV
+FROM dbo.BOMON a
+INNER JOIN dbo.KHOA b ON a.MAKHOA=b.MAKHOA
+LEFT JOIN dbo.GIAOVIEN c ON  a.MABM=c.MABM
+WHERE b.TENKHOA = N'Sinh học'
