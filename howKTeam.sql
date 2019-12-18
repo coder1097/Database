@@ -509,22 +509,27 @@ LEFT JOIN dbo.GIAOVIEN c ON  a.MABM=c.MABM
 WHERE b.TENKHOA = N'Sinh học'
 
 --Xuất ra danh sách giáo viên tham gia nhiều hơn 1 đề tài
-
+SELECT *
+FROM GIAOVIEN a
+WHERE 1 < (
+	SELECT COUNT(*)
+	FROM THAMGIADT b, DETAI c
+	WHERE a.MAGV=b.MAGV AND b.MADT=c.MADT
+)
 --Xuất ra thông tin khoa có nhiều hơn 2 giáo viên
 SELECT *
 FROM dbo.KHOA as a
 WHERE 2 < (
 	SELECT COUNT(*)
-	FROM dbo.GIAOVIEN b
-	INNER JOIN dbo.BOMON c ON b.MABM=c.MABM
-	AND c.MAKHOA=a.MAKHOA
+	FROM dbo.GIAOVIEN b, BOMON c
+	WHERE b.MABM=c.MABM AND c.MAKHOA=a.MAKHOA
 )
 
 --Xuất ra thông tin giáo viên có hơn 2 người thân
 SELECT *
 FROM dbo.GIAOVIEN AS a
 WHERE 2 < (
-	SELECT COUNT(*) FROM dbo.NGUOITHAN B
+	SELECT COUNT(*) FROM dbo.NGUOITHAN b
 	WHERE a.MAGV=b.MAGV
 )
 
